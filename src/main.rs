@@ -1,4 +1,5 @@
 use zbus::{SignalContext, ObjectServer, ConnectionBuilder, dbus_interface, fdo, Result};
+use std::process::Command;
 
 use event_listener::Event;
 use async_std;
@@ -10,6 +11,21 @@ struct Greeter {
 
 #[dbus_interface(name = "org.galaxymenu.MyGreeter1")]
 impl Greeter {
+
+    async fn next_desktop(&self) {
+        Command::new("awesome-client")
+        .arg("require(\"awful\").tag.viewnext()")
+        .output()
+        .expect("Failed to execute command");
+    }
+
+    async fn prev_desktop(&self) {
+        Command::new("awesome-client")
+        .arg("require(\"awful\").tag.viewprev()")
+        .output()
+        .expect("Failed to execute command");
+    }
+
     async fn say_hello(&self, name: &str) -> String {
         format!("Hello {}!", name)
     }
@@ -52,7 +68,7 @@ async fn main() -> Result<()> {
     };
     let done_listener = greeter.done.listen();
     let _ = ConnectionBuilder::session()?
-        .name("org.galaxymeny.MyGreeter")?
+        .name("org.galaxymenu.MyGreeter")?
         .serve_at("/org/galaxymenu/MyGreeter", greeter)?
         .build()
         .await?;
