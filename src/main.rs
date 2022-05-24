@@ -9,7 +9,7 @@ struct Greeter {
     done: Event,
 }
 
-#[dbus_interface(name = "org.galaxymenu.MyGreeter1")]
+#[dbus_interface(name = "org.galaxymenu.MyGreeter")]
 impl Greeter {
 
     async fn next_desktop(&self) {
