@@ -26,6 +26,13 @@ impl Greeter {
         .expect("Failed to execute command");
     }
 
+    async fn set_desktop(&self, desktop_num: u8) {
+        Command::new("awesome-client")
+        .arg(format!("local awful = require(\"awful\") \n local screen = awful.screen.focused()\n local tag = screen.tags[{}] \n if tag then \n tag:view_only()\n end", desktop_num))
+        .output()
+        .expect("Failed");
+    }
+
     async fn say_hello(&self, name: &str) -> String {
         format!("Hello {}!", name)
     }
